@@ -1,0 +1,16 @@
+sudo: false
+language: python
+
+python:
+  - "3.6"
+
+install:
+  - pip install coveralls -r requirements.txt
+
+script:
+  - flake8
+  - cp .env.ci .env
+  - coverage run --source yafas -m pytest
+
+after_success:
+  - coveralls
