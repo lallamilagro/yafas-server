@@ -10,6 +10,7 @@ def config():
         SECRET_KEY='12345',
         SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        BCRYPT_LOG_ROUNDS=4,
     )
 
 
@@ -18,6 +19,7 @@ def config():
     ('SECRET_KEY', '12345'),
     ('SQLALCHEMY_DATABASE_URI', 'sqlite:///:memory:'),
     ('SQLALCHEMY_TRACK_MODIFICATIONS', False),
+    ('BCRYPT_LOG_ROUNDS', 4),
 ))
 def test_app_configuration(option, expected, config):
     app = YafasApp('yafas', config=config)
