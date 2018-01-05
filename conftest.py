@@ -1,4 +1,5 @@
 import pytest
+from mixer.backend.flask import mixer as flask_mixer
 
 from yafas import YafasApp, db as yafas_db
 
@@ -28,3 +29,8 @@ def db():
         yafas_db.session.begin_nested()
     yield yafas_db
     savepoint.rollback()
+
+
+@pytest.fixture
+def mixer():
+    return flask_mixer
