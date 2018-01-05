@@ -2,7 +2,7 @@ import datetime
 
 from freezegun import freeze_time
 
-from yafas.beta_registration.models import BetaUser
+from yafas.beta.models import BetaUser
 
 
 def test_created_with_user(db):

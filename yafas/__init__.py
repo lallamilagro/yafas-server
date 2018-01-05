@@ -11,7 +11,7 @@ class YafasApp(Flask):
 
     blueprint_module_names = (
         'auth',
-        'beta_registration',
+        'beta',
     )
 
     def __init__(self, import_name: str, config: dict, *args, **kwargs):
@@ -32,7 +32,9 @@ class YafasApp(Flask):
 
     def init_blueprints(self):
         for bp_name in self.blueprint_module_names:
-            self.register_blueprint(self._import_blueprint(bp_name))
+            self.register_blueprint(
+                self._import_blueprint(bp_name),
+                url_prefix=f'/api/v1/{bp_name}')
 
     def _import_blueprint(self, bp_module_name: str) -> Blueprint:
         bp_module = importlib.import_module(f'{__name__}.{bp_module_name}')
