@@ -11,6 +11,7 @@ class YafasApp(Flask):
 
     blueprint_module_names = (
         'auth',
+        'beta_registration',
     )
 
     def __init__(self, import_name: str, config: dict, *args, **kwargs):
