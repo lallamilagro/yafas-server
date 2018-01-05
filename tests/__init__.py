@@ -33,7 +33,7 @@ class Factory:
     def user(self, email: str=None, password: str=None, **kwargs) -> User:
         return User(
             email=email or self.faker.email(),
-            password=password or self.faker.password())
+            password=password or self.faker.password(), **kwargs)
 
 
 class CycleFactory:

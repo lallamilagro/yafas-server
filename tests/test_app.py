@@ -29,6 +29,7 @@ def test_app_configuration(option, expected, config):
 
 def test_db_configured(config):
     app = YafasApp('yafas', config=config)
+
     with app.app_context():
         assert str(db.engine.url) == 'sqlite:///:memory:'
         assert str(db.session.bind.engine.url) == 'sqlite:///:memory:'

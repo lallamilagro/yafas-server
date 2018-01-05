@@ -15,11 +15,14 @@ class User(db.Model):
     email = sa.Column(sa.String(255), unique=True, nullable=False)
     password = sa.Column(sa.String(255), nullable=False)
     registered_in = sa.Column(sa.DateTime, nullable=False)
+    active = sa.Column(sa.Boolean, default=True, nullable=False)
 
-    def __init__(self, email: str, password: str):
+    def __init__(self, email: str, password: str, active: bool=None):
         self.email = email
         self.password = self.__hash_password(password)
         self.registered_in = datetime.datetime.utcnow()
+
+        self.active = active
 
     def __hash_password(self, password: str) -> str:
         return bcrypt.generate_password_hash(
