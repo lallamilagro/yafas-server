@@ -8,7 +8,8 @@ bp = Blueprint('beta', __name__)
 
 api = Api(bp)
 api.decorators = [
-    cors.crossdomain(origin='*'),
+    cors.crossdomain(
+        origin='*', headers=['Content-Type']),
 ]
 
 api.add_resource(Registration, '/register/')
