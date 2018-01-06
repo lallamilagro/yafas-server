@@ -1,20 +1,13 @@
-from marshmallow import Schema, ValidationError, fields, post_load, validates
+from marshmallow import fields, post_load
 
 from yafas import db
-from yafas.auth.models import User
+from yafas.auth.schemas import EmailSchema
 
 from .models import BetaUser
 
 
-class RegistrationSchema(Schema):
-    email = fields.Email(required=True)
+class RegistrationSchema(EmailSchema):
     password = fields.Str(required=True)
-
-    @validates('email')
-    def validate_email_is_free(self, value) -> bool:
-        if User.query.filter_by(email=value).first():
-            raise ValidationError('This email is already in use.')
-        return True
 
     @post_load
     def create_beta_user(self, data) -> BetaUser:
