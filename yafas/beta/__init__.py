@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from .api import Registration
+from .resources import Registration
 
 bp = Blueprint('beta', __name__)
 
