@@ -58,3 +58,6 @@ class ApiRequest:
 
     def delete(self, *args, **kwargs) -> dict:
         return self._api_call('delete', 204, *args, **kwargs)
+
+    def options(self, *args, **kwargs) -> dict:
+        return self._api_call('options', 200, *args, **kwargs)

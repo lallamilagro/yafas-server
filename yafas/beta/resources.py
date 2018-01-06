@@ -9,3 +9,6 @@ class Registration(Resource):
     def post(self):
         beta, errors = RegistrationSchema().load(request.json)
         return (errors, 400) if errors else ({}, 201)
+
+    def options(self):
+        """Empty method for cors decorator."""
