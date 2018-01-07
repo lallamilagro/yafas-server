@@ -4,6 +4,7 @@
 **/*.el
 **/*.md
 **/*.py[cod]
+**/*.sh
 **/__pycache__
 */*~
 .dockerignore

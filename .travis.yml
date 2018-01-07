@@ -8,8 +8,8 @@ services:
   - docker
 
 install:
-  - docker build -t yafas-server .
-  - docker run -dit --name yafas-server-ci yafas-server
+  - docker build -t yafas/yafas-server .
+  - docker run -dit --name yafas-server-ci yafas/yafas-server
   - docker exec yafas-server-ci pip install coveralls
 
 script:
@@ -21,6 +21,13 @@ after_success:
   - sed -i 's@/app@'"$TRAVIS_BUILD_DIR"'@g' .coverage
   - pip install coveralls
   - coveralls
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ./docker-push.sh
+  on:
+    branch: master
 
 after_script:
   - docker rm -f yafas-server-ci
