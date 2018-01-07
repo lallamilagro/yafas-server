@@ -7,4 +7,6 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 EXPOSE 5000
 
-ENV FLASK_APP=/app/app.py FLASK_DEBUG=1
+ENV FLASK_APP=/app/app.py SECRET_KEY=we-hate-you
+
+CMD ["gunicorn", "app:app", "-w", "4", "-b", "0.0.0.0:5000"]
