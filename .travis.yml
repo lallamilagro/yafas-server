@@ -1,17 +1,26 @@
-sudo: false
+sudo: required
 language: python
-cache: pip
 
 python:
   - "3.6"
 
+services:
+  - docker
+
 install:
-  - pip install coveralls -r requirements.txt
+  - docker build -t yafas-server .
+  - docker run -dit --name yafas-server-ci yafas-server
+  - docker exec yafas-server-ci pip install coveralls
 
 script:
-  - flake8
-  - cp .env.ci .env
-  - coverage run --source yafas -m pytest
+  - docker exec yafas-server-ci flake8
+  - docker exec yafas-server-ci coverage run --source yafas -m pytest
 
 after_success:
+  - docker cp yafas-server-ci:/app/.coverage ./
+  - sed -i 's@/app@'"$TRAVIS_BUILD_DIR"'@g' .coverage
+  - pip install coveralls
   - coveralls
+
+after_script:
+  - docker rm -f yafas-server-ci
