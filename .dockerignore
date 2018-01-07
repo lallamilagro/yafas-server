@@ -1,0 +1,16 @@
+**/*.cache
+**/*.db
+**/*.egg-info
+**/*.el
+**/*.md
+**/*.py[cod]
+**/__pycache__
+*/*~
+.dockerignore
+.eggs
+.env*
+.git*
+.travis.yml
+Dockerfile
+build
+dist
