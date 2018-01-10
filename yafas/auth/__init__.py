@@ -1,7 +1,5 @@
 from flask import Blueprint
 from flask_bcrypt import Bcrypt
-from flask_restful import Api
-from flask_restful.utils import cors
 
 bcrypt = Bcrypt()
 
@@ -15,10 +13,7 @@ class AuthBlueprint(Blueprint):
 
 bp = AuthBlueprint('auth', __name__)
 
-api = Api(bp)
-api.decorators = [
-    cors.crossdomain(origin='*'),
-]
-
 from .resources import CheckEmail  # noqa  # isort:skip
-api.add_resource(CheckEmail, '/check-email/<email>/')
+check_email = CheckEmail.as_view('check_email')
+bp.add_url_rule(
+    '/check-email/<email>/', view_func=check_email, methods=['GET'])

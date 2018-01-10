@@ -1,9 +1,9 @@
-from flask_restful import Resource
+from flask.views import MethodView
 
 from .schemas import EmailSchema
 
 
-class CheckEmail(Resource):
+class CheckEmail(MethodView):
 
     def get(self, email: str):
         _, errors = EmailSchema().load({'email': email})

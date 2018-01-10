@@ -4,10 +4,14 @@ from flask import Blueprint, Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+from yafas.tools import JsonResponse
+
 db = SQLAlchemy()
 
 
 class YafasApp(Flask):
+
+    response_class = JsonResponse
 
     blueprint_module_names = (
         'auth',
