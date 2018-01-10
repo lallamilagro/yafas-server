@@ -4,7 +4,7 @@ from flask import Blueprint, Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from yafas.tools import JsonResponse
+from yafas.tools import JsonResponse, apply_cors
 
 db = SQLAlchemy()
 
@@ -26,6 +26,8 @@ class YafasApp(Flask):
         self.init_db()
         self.init_migrations()
 
+        self.apply_cors()
+
         self.init_blueprints()
 
     def init_db(self):
@@ -43,3 +45,6 @@ class YafasApp(Flask):
     def _import_blueprint(self, bp_module_name: str) -> Blueprint:
         bp_module = importlib.import_module(f'{__name__}.{bp_module_name}')
         return bp_module.bp
+
+    def apply_cors(self):
+        self.after_request(apply_cors)

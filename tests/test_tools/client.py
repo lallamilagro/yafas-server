@@ -30,15 +30,23 @@ class ApiRequest:
 
         response = getattr(self.client, method)(*args, **kwargs)
 
+        self._assert_cors(response)
+
         if as_response:
             return response
 
         assert response.status_code == expected, (
             f'Expected "{expected}", got "{response.status_code}"')
+
         try:
             return response.json
         except json.decoder.JSONDecodeError:
             return None
+
+    def _assert_cors(self, response):
+        assert response.headers['Access-Control-Allow-Origin'] == '*'
+        assert 'CONTENT-TYPE' in response.headers[
+            'Access-Control-Allow-Headers']
 
     def _prepate_kwargs(self, **kwargs) -> dict:
         data = kwargs.pop('data', None)

@@ -1,20 +1,21 @@
 from flask import Response
 from flask.json import jsonify
+from werkzeug.exceptions import HTTPException
 
 
 class JsonResponse(Response):
 
     default_mimetype = 'application/json'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self._set_cors()
-
-    def _set_cors(self):
-        self.headers.set('Access-Control-Allow-Origin', '*')
-        self.headers.set('Access-Control-Allow-Headers', 'CONTENT-TYPE')
-
     @classmethod
     def force_type(cls, response, environ=None):
-        return super().force_type(jsonify(response), environ)
+        if not isinstance(response, HTTPException):
+            response = jsonify(response)
+
+        return super().force_type(response, environ)
+
+
+def apply_cors(response):
+    response.headers.set('Access-Control-Allow-Origin', '*')
+    response.headers.set('Access-Control-Allow-Headers', 'CONTENT-TYPE')
+    return response
