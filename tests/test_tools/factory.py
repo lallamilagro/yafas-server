@@ -2,7 +2,6 @@ from faker import Faker
 from flask_sqlalchemy import SQLAlchemy
 
 from yafas.auth.models import User
-from yafas.beta.models import BetaUser
 
 
 def _transaction(method):
@@ -32,9 +31,7 @@ class Factory:
 
     @_transaction
     def user(self, email: str=None, password: str=None, **kwargs) -> User:
-        model = BetaUser if kwargs.pop('beta', False) else User
-
-        return model(
+        return User(
             email=email or self.faker.email(),
             password=password or self.faker.password(), **kwargs)
 
