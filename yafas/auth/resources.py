@@ -1,10 +1,8 @@
-from flask.views import MethodView
 
-from .schemas import EmailSchema
+from . import bp, schemas
 
 
-class CheckEmail(MethodView):
-
-    def get(self, email: str):
-        _, errors = EmailSchema().load({'email': email})
-        return (errors, 400) if errors else ({}, 200)
+@bp.route('/check-email/<email>/', methods=['GET'])
+def check_email(email: str):
+    _, errors = schemas.EmailSchema().load({'email': email})
+    return (errors, 400) if errors else ({}, 200)

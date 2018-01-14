@@ -1,11 +1,10 @@
 from flask import request
-from flask.views import MethodView
 
+from . import bp
 from .schemas import RegistrationSchema
 
 
-class Registration(MethodView):
-
-    def post(self):
-        beta, errors = RegistrationSchema().load(request.json)
-        return (errors, 400) if errors else ({}, 201)
+@bp.route('/register/', methods=['POST'])
+def register():
+    beta, errors = RegistrationSchema().load(request.json)
+    return (errors, 400) if errors else ({}, 201)
