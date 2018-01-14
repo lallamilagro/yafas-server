@@ -6,20 +6,22 @@ from yafas import YafasApp, db
 @pytest.fixture
 def config():
     return dict(
+        BCRYPT_LOG_ROUNDS=4,
+        JWT_SECRET_KEY='I-hate-frontend',
         MIGRATIONS_DIR='yafas/migrations/',
         SECRET_KEY='12345',
         SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        BCRYPT_LOG_ROUNDS=4,
     )
 
 
 @pytest.mark.parametrize('option, expected', (
+    ('BCRYPT_LOG_ROUNDS', 4),
+    ('JWT_SECRET_KEY', 'I-hate-frontend'),
     ('MIGRATIONS_DIR', 'yafas/migrations/'),
     ('SECRET_KEY', '12345'),
     ('SQLALCHEMY_DATABASE_URI', 'sqlite:///:memory:'),
     ('SQLALCHEMY_TRACK_MODIFICATIONS', False),
-    ('BCRYPT_LOG_ROUNDS', 4),
 ))
 def test_app_configuration(option, expected, config):
     app = YafasApp('yafas', config=config)

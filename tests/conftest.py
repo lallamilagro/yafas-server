@@ -5,11 +5,12 @@ from tests import ApiClient, Factory
 from yafas import YafasApp, db as yafas_db
 
 app_config = dict(
+    BCRYPT_LOG_ROUNDS=4,
+    JWT_SECRET_KEY='I-hate-frontend',
     MIGRATIONS_DIR='yafas/migrations/',
     SECRET_KEY='12345',
     SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
-    BCRYPT_LOG_ROUNDS=4,
 )
 
 

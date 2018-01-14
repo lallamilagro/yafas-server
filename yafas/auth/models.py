@@ -2,6 +2,8 @@ import datetime
 
 import sqlalchemy as sa
 from flask import current_app
+from flask_jwt_extended import (
+    create_access_token, create_refresh_token, get_jwt_identity)
 
 from yafas import db
 
@@ -30,3 +32,13 @@ class User(db.Model):
 
     def check_password(self, password: str) -> bool:
         return bcrypt.check_password_hash(self.password, password)
+
+    def create_access_token(self) -> str:
+        return create_access_token(identity=self.email)
+
+    def create_refresh_token(self) -> str:
+        return create_refresh_token(identity=self.email)
+
+    @classmethod
+    def jwt_retrieve(cls) -> 'User':
+        return cls.query.filter_by(email=get_jwt_identity()).first()
