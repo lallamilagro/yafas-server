@@ -1,6 +1,6 @@
 from dotenv_config import Config
 
-from yafas import YafasApp
+from yafas import YafasApp, db
 
 conf_loader = Config()
 config = dict(
@@ -14,3 +14,8 @@ config = dict(
 )
 
 app = YafasApp(__name__, config=config)
+
+
+@app.shell_context_processor
+def make_shell_context():
+    return dict(app=app, db=db)
