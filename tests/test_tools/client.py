@@ -45,8 +45,9 @@ class ApiRequest:
 
     def _assert_cors(self, response):
         assert response.headers['Access-Control-Allow-Origin'] == '*'
-        assert 'CONTENT-TYPE' in response.headers[
-            'Access-Control-Allow-Headers']
+        for required_header in ('CONTENT-TYPE', 'Authorization'):
+            assert required_header in response.headers[
+                'Access-Control-Allow-Headers']
 
     def _prepate_kwargs(self, **kwargs) -> dict:
         data = kwargs.pop('data', None)

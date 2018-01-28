@@ -17,5 +17,6 @@ class JsonResponse(Response):
 
 def apply_cors(response):
     response.headers.set('Access-Control-Allow-Origin', '*')
-    response.headers.set('Access-Control-Allow-Headers', 'CONTENT-TYPE')
+    response.headers.set(
+        'Access-Control-Allow-Headers', 'CONTENT-TYPE,Authorization')
     return response
