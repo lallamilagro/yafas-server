@@ -8,7 +8,7 @@ SQLAlchemy==1.2.0
 Werkzeug==0.14.1
 alembic==0.9.6
 bcrypt==3.1.4
-dotenv-config==0.0.1
+dotenv-config==0.1.0
 flake8-commas==0.5.1
 flake8-debugger==3.0.0
 flake8-isort==2.3
@@ -25,3 +25,4 @@ mixer==6.0.1
 psycopg2==2.7.3.2
 pytest==3.3.1
 python-dateutil==2.6.1
+raven[flask]==6.5.0

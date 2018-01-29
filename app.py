@@ -1,4 +1,5 @@
 from dotenv_config import Config
+from raven.contrib.flask import Sentry
 
 from yafas import YafasApp, db
 
@@ -14,6 +15,8 @@ config = dict(
 )
 
 app = YafasApp(__name__, config=config)
+
+sentry = Sentry(app, dsn=conf_loader('SENTRY_DSN', default=None))
 
 
 @app.shell_context_processor
