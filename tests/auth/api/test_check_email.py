@@ -23,7 +23,7 @@ def test_already_used(client, factory):
     response = client.api.get(url('test@test.com'), as_response=True)
 
     assert response.status_code == 400
-    assert User.query.count() == 1
+    assert response.json == {'email': ['This email is already in use.']}
 
 
 def test_invalid_email(client):
