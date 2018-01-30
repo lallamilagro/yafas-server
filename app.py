@@ -16,7 +16,7 @@ config = dict(
 
 app = YafasApp(__name__, config=config)
 
-sentry = Sentry(app, dsn=conf_loader('SENTRY_DSN', default=None))
+sentry = Sentry(app, dsn=conf_loader('YAFAS_SERVER_SENTRY_DSN', default=None))
 
 
 @app.shell_context_processor
