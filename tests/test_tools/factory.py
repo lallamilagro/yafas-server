@@ -1,5 +1,4 @@
 from faker import Faker
-from flask_sqlalchemy import SQLAlchemy
 
 from yafas.auth.models import User
 
@@ -23,7 +22,7 @@ class Factory:
 
     faker = Faker()
 
-    def __init__(self, db: SQLAlchemy):
+    def __init__(self, db):
         self.db = db
 
     def cycle(self, count: int) -> 'Factory':
@@ -38,7 +37,7 @@ class Factory:
 
 class CycleFactory:
 
-    def __init__(self, db: SQLAlchemy, count: int) -> Factory:
+    def __init__(self, db, count: int) -> Factory:
         self.db = db
         self.count = count
 

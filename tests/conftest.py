@@ -1,37 +1,32 @@
+import freezegun
 import pytest
 from mixer.backend.flask import mixer as flask_mixer
 
-from tests import ApiClient, Factory
-from yafas import YafasApp, db as yafas_db
+from tests import Factory
+from yafas import orm
+from yafas.app import YafasApp
 
 app_config = dict(
-    BCRYPT_LOG_ROUNDS=4,
-    JWT_SECRET_KEY='I-hate-frontend',
-    MIGRATIONS_DIR='yafas/migrations/',
-    SECRET_KEY='12345',
-    SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',
-    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    DATABASE_URI='sqlite:///:memory:',
 )
 
 
 @pytest.fixture(scope='session', autouse=True)
 def app() -> YafasApp:
-    app = YafasApp('yafas', config=app_config)
-    app.app_context().push()
+    return YafasApp(config=app_config)
 
-    app.test_client_class = ApiClient
 
-    yafas_db.create_all()
-
-    return app
+@pytest.fixture
+def api(app):
+    return app.api
 
 
 @pytest.fixture
 def db():
-    savepoint = yafas_db.session.begin_nested()
+    savepoint = orm.db.session().begin_nested()
     for _ in range(2):
-        yafas_db.session.begin_nested()
-    yield yafas_db
+        orm.db.session.begin_nested()
+    yield orm.db
     savepoint.rollback()
 
 
@@ -46,5 +41,5 @@ def factory(db):
 
 
 @pytest.fixture
-def client(app):
-    return app.test_client()
+def freeze_time():
+    return freezegun.freeze_time

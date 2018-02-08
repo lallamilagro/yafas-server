@@ -1,6 +1,7 @@
 import pytest
 
-from yafas import YafasApp, db
+from yafas.app import YafasApp
+from yafas.orm import db
 
 
 @pytest.fixture
