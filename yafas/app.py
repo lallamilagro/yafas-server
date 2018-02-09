@@ -1,16 +1,14 @@
 import falcon
 from sqlalchemy import create_engine
 
-from yafas import orm
+from yafas import config, db, orm
 
 from .auth import models  # noqa
 
 
 class YafasApp:
 
-    def __init__(self, config: dict):
-        self.config = config
-
+    def __init__(self):
         self.api = falcon.API(middleware=self.middlewares())
 
         self.init_resources()
@@ -19,10 +17,10 @@ class YafasApp:
 
     def init_db(self):
         self.engine = create_engine(
-            self.config.get('DATABASE_URI', 'sqlite:///yafas.db'))
+            config.get('DATABASE_URI', 'sqlite:///yafas.db'))
 
-        orm.db.session.configure(bind=self.engine)
-        orm.db.Base.metadata.create_all(self.engine)
+        db.session.configure(bind=self.engine)
+        db.Base.metadata.create_all(self.engine)
 
     def init_resources(self):
         for uri, resource in self.resources():

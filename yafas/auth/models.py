@@ -1,9 +1,10 @@
 import datetime
 
 import bcrypt
+import jwt
 import sqlalchemy as sa
 
-from yafas.orm import db
+from yafas import config, db
 
 
 class User(db.Base):
@@ -22,18 +23,40 @@ class User(db.Base):
 
         self.active = active
 
-    def __hash_password(self, password: str) -> str:
-        return bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=4))
+    def __hash_password(self, password: str) -> bytes:
+        return bcrypt.hashpw(
+            password.encode(),
+            bcrypt.gensalt(config['BCRYPT_ROUNDS']),
+        )
 
     def check_password(self, password: str) -> bool:
         return bcrypt.checkpw(password.encode(), self.password)
 
-    # def create_access_token(self) -> str:
-    #     return create_access_token(identity=self.email)
+    def __create_token(self, token_type: str, expires_delta) -> bytes:
+        now = datetime.datetime.utcnow()
+        payload = {
+            'exp': now + expires_delta,
+            'iat': now,
+            'sub': self.email,
+            'type': token_type,
+        }
+        return jwt.encode(
+            payload,
+            config['SECRET_KEY'],
+            algorithm='HS256',
+        ).decode()
 
-    # def create_refresh_token(self) -> str:
-    #     return create_refresh_token(identity=self.email)
+    def create_access_token(self) -> str:
+        return self.__create_token('access', config['ACCESS_TOKEN_EXPIRES'])
 
-    # @classmethod
-    # def jwt_retrieve(cls) -> 'User':
-    #     return cls.query.filter_by(email=get_jwt_identity()).first()
+    def create_refresh_token(self) -> str:
+        return self.__create_token('refresh', config['REFRESH_TOKEN_EXPIRES'])
+
+    @classmethod
+    def decode_token(cls, token: str) -> dict:
+        return jwt.decode(token.encode(), config['SECRET_KEY'])
+
+    @classmethod
+    def retrieve_by_token(cls, token: str) -> 'User':
+        decoded = cls.decode_token(token)
+        return db.session.query(cls).filter_by(email=decoded['sub']).first()

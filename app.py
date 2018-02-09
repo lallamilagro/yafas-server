@@ -1,6 +1,6 @@
 from dotenv_config import Config
-from raven.contrib.flask import Sentry
 
+from raven.contrib.flask import Sentry
 from yafas import YafasApp, db
 
 conf_loader = Config()

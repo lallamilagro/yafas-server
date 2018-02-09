@@ -1,5 +1,8 @@
 Faker==0.8.10
+asn1crypto==0.24.0
 bcrypt==3.1.4
+cryptography==2.1.4
+dotenv-config==0.1.0
 falcon==1.4.1
 flake8-commas==1.0.0
 flake8-debugger==3.0.0
@@ -11,6 +14,10 @@ gunicorn==19.7.1
 isort==4.3.3
 marshmallow==2.15.0
 mixer==6.0.1
+pyjwt==1.5.3
 pytest-falcon-client==0.0.1
+pytest-freezegun==0.2.0
+pytest-mock==1.6.3
 pytest==3.4.0
+python-dotenv==0.7.1
 sqlalchemy==1.2.2
