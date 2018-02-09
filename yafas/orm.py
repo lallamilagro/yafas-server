@@ -10,10 +10,10 @@ class db:
 
 class SQLAlchemySessionMiddleware:
 
-    def process_request(self, request, response, resource, params):
+    def process_resource(self, req, res, resource, params):
         resource.session = db.session()
 
-    def process_response(self, request, response, resource, req_succeeded):
+    def process_response(self, req, res, resource, req_succeeded):
         if hasattr(resource, 'session'):
             if not req_succeeded:
                 resource.session.rollback()
