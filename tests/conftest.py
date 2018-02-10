@@ -36,6 +36,7 @@ def db():
     for _ in range(2):
         yafas_db.session.begin_nested()
     yield yafas_db
+    # FIXME: transaction can be closed via middleware before this code runs
     savepoint.rollback()
 
 

@@ -1,9 +1,9 @@
 import falcon
 from sqlalchemy import create_engine
 
-from yafas import config, db, orm
-
-from .auth import models  # noqa
+from . import config, db, orm
+from .error_handlers import handlers
+from .routes import routes
 
 
 class YafasApp:
@@ -12,6 +12,7 @@ class YafasApp:
         self.api = falcon.API(middleware=self.middlewares())
 
         self.init_resources()
+        self.init_error_handlers()
 
         self.init_db()
 
@@ -23,13 +24,14 @@ class YafasApp:
         db.Base.metadata.create_all(self.engine)
 
     def init_resources(self):
-        for uri, resource in self.resources():
-            self.api.add_route(uri, resource)
-
-    def resources(self) -> []:
-        return []
+        for uri, resource in routes:
+            self.api.add_route(f'/api/v1/{uri}/', resource)
 
     def middlewares(self) -> []:
         return [
             orm.SQLAlchemySessionMiddleware(),
         ]
+
+    def init_error_handlers(self):
+        for exception, handler in handlers:
+            self.api.add_error_handler(exception, handler)

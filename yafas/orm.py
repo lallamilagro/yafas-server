@@ -3,6 +3,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 
 class db:
+    # TODO: write base class with `query` property and primary_key
     Base = declarative_base()
 
     session = scoped_session(sessionmaker())

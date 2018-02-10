@@ -10,7 +10,7 @@ class EmailSchema(Schema):
 
     @validates('email')
     def validate_email_is_free(self, value) -> bool:
-        if User.query.filter_by(email=value).first():
+        if db.session.query(User).filter_by(email=value).first():
             raise ValidationError('This email is already in use.')
         return True
 
