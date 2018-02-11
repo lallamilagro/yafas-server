@@ -1,3 +1,5 @@
+import falcon
+
 from . import schemas
 from .models import User
 
@@ -21,9 +23,11 @@ def login():
     return (errors, 400) if errors else (tokens, 201)
 
 
-def register():
-    _, errors = schemas.RegistrationSchema().load(request.json)
-    return (errors, 400) if errors else ({}, 201)
+class Register:
+    def on_post(self, request, response):
+        schemas.RegistrationSchema(strict=True).load(request.media)
+        response.media = {}
+        response.status = falcon.HTTP_201
 
 
 def refresh():
