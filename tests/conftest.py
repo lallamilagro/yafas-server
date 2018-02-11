@@ -2,8 +2,7 @@ from unittest.mock import patch
 
 import freezegun
 import pytest
-from mixer.backend.sqlalchemy import Mixer
-from sqlalchemy import event
+from mixer.backend.sqlalchemy import mixer as sqlalchemy_mixer
 
 from tests import Factory
 from yafas import config as yafas_config, db as yafas_db
@@ -14,9 +13,8 @@ from yafas.app import YafasApp
 def config() -> dict:
     overrides = {
         'BCRYPT_ROUNDS': 4,
-        'SECRET_KEY': 'azaza',
+        'SECRET_KEY': 'lolkekcheburek',
         'DATABASE_URI': 'sqlite:///:memory:',
-        'DATABASE_ECHO': True,
     }
 
     with patch.dict(yafas_config, overrides):
@@ -52,21 +50,8 @@ def db(app):
 
 
 @pytest.fixture
-def skip_rollback(db):
-    """Skips all rallback calls."""
-    @event.listens_for(yafas_db.session, 'after_transaction_end')
-    def restart_savepoint(session, transaction):
-        """Start new nested transaction when `transaction` rolled back.
-
-        As a side effect `db.session.rollback()` does not work inside tests.
-        """
-        if transaction.nested:
-            session.begin_nested()
-
-
-@pytest.fixture
 def mixer(db):
-    return Mixer(db.session, commit=True)
+    return sqlalchemy_mixer
 
 
 @pytest.fixture

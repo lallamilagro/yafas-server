@@ -7,12 +7,10 @@ from yafas.auth.models import User
 def _transaction(method):
 
     def _decorator(self, *args, **kwargs):
-        db.session.begin_nested()
-
         instance = method(self, *args, **kwargs)
 
         db.session.add(instance)
-        db.session.commit()
+        db.session.flush()
 
         return instance
 

@@ -2,7 +2,7 @@ def url(email: str) -> str:
     return f'/api/v1/auth/check-email/{email}/'
 
 
-def test_is_free(client, factory, db):
+def test_is_free(client, factory):
     factory.user(email='test@test.com')
 
     got = client.get(url('test-user@test.com'))
