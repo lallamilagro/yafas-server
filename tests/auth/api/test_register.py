@@ -8,10 +8,13 @@ URL = '/api/v1/auth/register/'
 
 
 def test_success(client):
-    client.post(URL, json={
+    got = client.post(URL, json={
         'email': 'test@test.com',
         'password': 'test',
     })
+
+    assert 'access_token' in got
+    assert 'refresh_token' in got
 
     assert User.query.filter_by(email='test@test.com').first()
 

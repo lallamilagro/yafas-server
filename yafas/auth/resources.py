@@ -25,8 +25,8 @@ def login():
 
 class Register:
     def on_post(self, request, response):
-        schemas.RegistrationSchema(strict=True).load(request.media)
-        response.media = {}
+        response.media, _ = schemas.RegistrationSchema(strict=True).load(
+            request.media)
         response.status = falcon.HTTP_201
 
 

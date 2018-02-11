@@ -23,7 +23,10 @@ class RegistrationSchema(EmailSchema):
         user = User(**data)
         db.session.add(user)
         db.session.commit()
-        return user
+        return {
+            'access_token': user.create_access_token(),
+            'refresh_token': user.create_refresh_token(),
+        }
 
 
 class LoginSchema(Schema):
