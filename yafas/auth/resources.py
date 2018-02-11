@@ -1,40 +1,40 @@
 import falcon
 
 from . import schemas
-from .models import User
 
-# @jwt.invalid_token_loader
-# def invalid_token(reason):
-#     return {'message': [reason]}, 422
-
-
-# @jwt.expired_token_loader
-# def token_expired():
-#     return {'message': ['Token has expired.']}, 401
 
 class CheckEmail:
+    required_token = None
+
     def on_get(self, request, response, email):
-        schemas.EmailSchema(strict=True).load({'email': email})
+        schemas.EmailSchema().load({'email': email})
         response.media = {}
 
 
 class Login:
+    required_token = None
+
     def on_post(self, request, response):
-        response.media, _ = schemas.LoginSchema(strict=True).load(
+        response.media, _ = schemas.LoginSchema().load(
             request.media)
         response.status = falcon.HTTP_201
 
 
 class Register:
+    required_token = None
+
     def on_post(self, request, response):
-        response.media, _ = schemas.RegistrationSchema(strict=True).load(
+        response.media, _ = schemas.RegistrationSchema().load(
             request.media)
         response.status = falcon.HTTP_201
 
 
-def refresh():
-    user = User.jwt_retrieve()
-    return {
-        'access_token': user.create_access_token(),
-        'refresh_token': user.create_refresh_token(),
-    }, 201
+class Refresh:
+    required_token = 'refresh'
+
+    def on_post(self, request, response):
+        response.media = {
+            'access_token': self.user.create_access_token(),
+            'refresh_token': self.user.create_refresh_token(),
+        }
+        response.status = falcon.HTTP_201
