@@ -18,7 +18,9 @@ class YafasApp:
 
     def init_db(self):
         self.engine = create_engine(
-            config.get('DATABASE_URI', 'sqlite:///yafas.db'))
+            config.get('DATABASE_URI', 'sqlite:///yafas.db'),
+            echo=config.get('DATABASE_ECHO', False),
+        )
 
         db.session.configure(bind=self.engine)
         db.Base.metadata.create_all(self.engine)

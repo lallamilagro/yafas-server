@@ -1,10 +1,3 @@
-import pytest
-
-from yafas.auth.models import User
-
-pytestmark = pytest.mark.usefixtures('db')
-
-
 def url(email: str) -> str:
     return f'/api/v1/auth/check-email/{email}/'
 
@@ -15,7 +8,6 @@ def test_is_free(client, factory, db):
     got = client.get(url('test-user@test.com'))
 
     assert got == {}
-    assert db.session.query(User).count() == 1
 
 
 def test_already_used(client, factory):
