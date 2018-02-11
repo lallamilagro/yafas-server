@@ -7,16 +7,16 @@ pytestmark = pytest.mark.usefixtures('db')
 URL = '/api/v1/auth/register/'
 
 
-def test_success(client, db):
+def test_success(client):
     client.post(URL, json={
         'email': 'test@test.com',
         'password': 'test',
     })
 
-    assert db.session.query(User).filter_by(email='test@test.com').first()
+    assert User.query.filter_by(email='test@test.com').first()
 
 
-def test_failed_when_password_incorrect(client, db):
+def test_failed_when_password_incorrect(client):
     response = client.post(URL, json={
         'email': 'test.com',
         'password': 'test',
@@ -25,7 +25,7 @@ def test_failed_when_password_incorrect(client, db):
     assert response.status_code == 400
     assert response.json == {'email': ['Not a valid email address.']}
 
-    assert not db.session.query(User).first()
+    assert not User.query.first()
 
 
 @pytest.mark.parametrize('data, error', (
@@ -41,13 +41,13 @@ def test_failed_when_password_incorrect(client, db):
          'email': ['Missing data for required field.']},
     ),
 ))
-def test_failed_when_required_fields_skipped(data, error, client, db):
+def test_failed_when_required_fields_skipped(data, error, client):
     response = client.post(URL, json=data, as_response=True)
 
     assert response.status_code == 400
     assert response.json == error
 
-    assert not db.session.query(User).first()
+    assert not User.query.first()
 
 
 def test_failed_if_already_registered(client, factory):

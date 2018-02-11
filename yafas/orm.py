@@ -1,12 +1,24 @@
+import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 
+def base_model_factory(session):
+    class BaseModel:
+
+        id = sa.Column(sa.Integer, primary_key=True)
+
+        query = session.query_property()
+
+    return BaseModel
+
+
 class db:
     # TODO: write base class with `query` property and primary_key
-    Base = declarative_base()
 
     session = scoped_session(sessionmaker())
+
+    Base = declarative_base(cls=base_model_factory(session))
 
 
 class SQLAlchemySessionMiddleware:

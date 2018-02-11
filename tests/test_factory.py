@@ -11,7 +11,7 @@ def test_cycle_factory(count, commit, factory, db):
         db.session.commit()
 
     assert len(users) == count
-    db.session.query(User).count() == count
+    User.query.count() == count
     for user in users:
         assert isinstance(user, User)
 
@@ -23,4 +23,4 @@ def test_factory(commit, factory, db):
         db.session.commit()
 
     assert isinstance(user, User)
-    assert db.session.query(User).count() == 1
+    assert User.query.count() == 1

@@ -10,7 +10,6 @@ from yafas import config, db
 class User(db.Base):
     __tablename__ = 'users'
 
-    id = sa.Column(sa.Integer, primary_key=True)
     email = sa.Column(sa.String(255), unique=True, nullable=False)
     password = sa.Column(sa.String(255), nullable=False)
     registered_in = sa.Column(sa.DateTime, nullable=False)
@@ -59,4 +58,4 @@ class User(db.Base):
     @classmethod
     def retrieve_by_token(cls, token: str) -> 'User':
         decoded = cls.decode_token(token)
-        return db.session.query(cls).filter_by(email=decoded['sub']).first()
+        return cls.query.filter_by(email=decoded['sub']).first()
