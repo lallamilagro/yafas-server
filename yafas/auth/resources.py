@@ -18,9 +18,11 @@ class CheckEmail:
         response.media = {}
 
 
-def login():
-    tokens, errors = schemas.LoginSchema().load(request.json)
-    return (errors, 400) if errors else (tokens, 201)
+class Login:
+    def on_post(self, request, response):
+        response.media, _ = schemas.LoginSchema(strict=True).load(
+            request.media)
+        response.status = falcon.HTTP_201
 
 
 class Register:
