@@ -1,7 +1,6 @@
 import falcon
-from sqlalchemy import create_engine
 
-from . import config, db
+from . import db
 from .error_handlers import handlers
 from .middlewares import middlewares
 from .routes import routes
@@ -15,15 +14,7 @@ class YafasApp:
         self.init_resources()
         self.init_error_handlers()
 
-        self.init_db()
-
-    def init_db(self):
-        self.engine = create_engine(
-            config.get('DATABASE_URI', 'sqlite:///yafas.db'),
-        )
-
-        db.session.configure(bind=self.engine)
-        db.Base.metadata.create_all(self.engine)
+        db.init()
 
     def init_resources(self):
         for uri, resource in routes:

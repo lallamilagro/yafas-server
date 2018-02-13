@@ -58,6 +58,6 @@ def test_and_now_db_clean(db):
     assert User.query.count() == 0
 
 
-def test_db_configured(app, config, db):
-    assert str(app.engine.url) == config['DATABASE_URI']
+def test_db_configured(config, db):
+    assert str(db.engine.url) == config['DATABASE_URI']
     assert str(db.session.bind.engine.url) == config['DATABASE_URI']

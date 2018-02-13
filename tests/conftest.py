@@ -23,7 +23,11 @@ def config() -> dict:
 
 @pytest.fixture(scope='session', autouse=True)
 def app(config) -> YafasApp:
-    return YafasApp()
+    app = YafasApp()
+
+    yafas_db.create()
+
+    return app
 
 
 @pytest.fixture
@@ -35,7 +39,7 @@ def api(app):
 def db(app):
     """Manually creates db connection, start transaction and configre
     session to use it."""
-    connection = app.engine.connect()
+    connection = yafas_db.engine.connect()
     transaction = connection.begin()
     yafas_db.session.configure(bind=connection)
 
