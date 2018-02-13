@@ -1,3 +1,10 @@
+import pytest
+
+from tests import cors_callback
+
+pytestmark = pytest.mark.client(callback=cors_callback)
+
+
 def url(email: str) -> str:
     return f'/api/v1/auth/check-email/{email}/'
 

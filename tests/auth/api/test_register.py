@@ -1,8 +1,9 @@
 import pytest
 
+from tests import cors_callback
 from yafas.auth.models import User
 
-pytestmark = pytest.mark.usefixtures('db')
+pytestmark = pytest.mark.client(callback=cors_callback)
 
 URL = '/api/v1/auth/register/'
 

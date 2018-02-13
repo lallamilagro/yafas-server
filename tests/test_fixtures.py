@@ -59,5 +59,5 @@ def test_and_now_db_clean(db):
 
 
 def test_db_configured(app, config, db):
-    assert str(app.engine.url) == 'sqlite:///:memory:'
-    assert str(db.session.bind.engine.url) == 'sqlite:///:memory:'
+    assert str(app.engine.url) == config['DATABASE_URI']
+    assert str(db.session.bind.engine.url) == config['DATABASE_URI']
