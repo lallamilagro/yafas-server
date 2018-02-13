@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-import freezegun
 import pytest
 from mixer.backend.sqlalchemy import mixer as sqlalchemy_mixer
 
@@ -61,8 +60,3 @@ def mixer(db):
 @pytest.fixture
 def factory(db):
     return Factory()
-
-
-@pytest.fixture
-def freeze_time():
-    return freezegun.freeze_time

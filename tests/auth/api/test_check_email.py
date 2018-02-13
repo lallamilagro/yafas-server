@@ -5,16 +5,13 @@ from tests import cors_callback
 pytestmark = pytest.mark.client(callback=cors_callback)
 
 
-def url(email: str) -> str:
-    return f'/api/v1/auth/check-email/{email}/'
+def url(email: str) -> str: return f'/api/v1/auth/check-email/{email}/'
 
 
 def test_is_free(client, factory):
     factory.user(email='test@test.com')
 
-    got = client.get(url('test-user@test.com'))
-
-    assert got == {}
+    assert client.get(url('test-user@test.com')) == {}
 
 
 def test_already_used(client, factory):

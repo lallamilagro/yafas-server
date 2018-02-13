@@ -4,15 +4,13 @@ from tests import cors_callback
 
 pytestmark = pytest.mark.client(callback=cors_callback)
 
-
 URL = '/api/v1/auth/login/'
 
 
 def test_success_login(client, factory):
     factory.user(email='test@test.com', password='test')
 
-    got = client.post(URL, json={
-        'email': 'test@test.com', 'password': 'test'})
+    got = client.post(URL, json={'email': 'test@test.com', 'password': 'test'})
 
     assert 'access_token' in got
     assert 'refresh_token' in got

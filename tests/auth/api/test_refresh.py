@@ -4,7 +4,6 @@ from tests import cors_callback
 
 pytestmark = pytest.mark.client(callback=cors_callback)
 
-
 URL = '/api/v1/auth/refresh/'
 
 
@@ -46,7 +45,6 @@ def test_with_invalid_token(refresh_token, client):
     assert response.status_code == 422
 
 
-@pytest.mark.freeze_time
 def test_with_expired_refresh_token(freezer, client, factory):
     freezer.move_to('2018-01-15')
     user = factory.user(email='test@test.com', password='test')
