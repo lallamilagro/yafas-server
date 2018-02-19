@@ -1,23 +1,27 @@
 import pytest
 
+from tests import cors_callback
 from yafas.auth.models import User
 
-pytestmark = pytest.mark.usefixtures('db')
+pytestmark = pytest.mark.client(callback=cors_callback)
 
 URL = '/api/v1/auth/register/'
 
 
 def test_success(client):
-    client.api.post(URL, data={
+    got = client.post(URL, json={
         'email': 'test@test.com',
         'password': 'test',
     })
+
+    assert 'access_token' in got
+    assert 'refresh_token' in got
 
     assert User.query.filter_by(email='test@test.com').first()
 
 
 def test_failed_when_password_incorrect(client):
-    response = client.api.post(URL, data={
+    response = client.post(URL, json={
         'email': 'test.com',
         'password': 'test',
     }, as_response=True)
@@ -42,7 +46,7 @@ def test_failed_when_password_incorrect(client):
     ),
 ))
 def test_failed_when_required_fields_skipped(data, error, client):
-    response = client.api.post(URL, data=data, as_response=True)
+    response = client.post(URL, json=data, as_response=True)
 
     assert response.status_code == 400
     assert response.json == error
@@ -53,7 +57,7 @@ def test_failed_when_required_fields_skipped(data, error, client):
 def test_failed_if_already_registered(client, factory):
     factory.user(email='test@test.com')
 
-    response = client.api.post(URL, data={
+    response = client.post(URL, json={
         'email': 'test@test.com',
         'password': 'test',
     }, as_response=True)
@@ -61,8 +65,6 @@ def test_failed_if_already_registered(client, factory):
     assert response.status_code == 400
     assert response.json == {'email': ['This email is already in use.']}
 
-    assert User.query.count() == 1
-
 
 def test_options_works(client):
-    client.api.options(URL)
+    client.options(URL)

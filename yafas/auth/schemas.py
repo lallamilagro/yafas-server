@@ -1,11 +1,12 @@
-from marshmallow import Schema, ValidationError, fields, post_load, validates
+from marshmallow import ValidationError, fields, post_load, validates
 
 from yafas import db
+from yafas.base import StrictSchema
 
 from .models import User
 
 
-class EmailSchema(Schema):
+class EmailSchema(StrictSchema):
     email = fields.Email(required=True)
 
     @validates('email')
@@ -23,10 +24,13 @@ class RegistrationSchema(EmailSchema):
         user = User(**data)
         db.session.add(user)
         db.session.commit()
-        return user
+        return {
+            'access_token': user.create_access_token(),
+            'refresh_token': user.create_refresh_token(),
+        }
 
 
-class LoginSchema(Schema):
+class LoginSchema(StrictSchema):
     email = fields.Email(required=True)
     password = fields.String(required=True)
 

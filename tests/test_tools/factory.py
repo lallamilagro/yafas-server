@@ -1,18 +1,16 @@
 from faker import Faker
-from flask_sqlalchemy import SQLAlchemy
 
+from yafas import db
 from yafas.auth.models import User
 
 
 def _transaction(method):
 
     def _decorator(self, *args, **kwargs):
-        self.db.session.begin_nested()
-
         instance = method(self, *args, **kwargs)
 
-        self.db.session.add(instance)
-        self.db.session.commit()
+        db.session.add(instance)
+        db.session.flush()
 
         return instance
 
@@ -23,11 +21,8 @@ class Factory:
 
     faker = Faker()
 
-    def __init__(self, db: SQLAlchemy):
-        self.db = db
-
     def cycle(self, count: int) -> 'Factory':
-        return CycleFactory(self.db, count)
+        return CycleFactory(count)
 
     @_transaction
     def user(self, email: str=None, password: str=None, **kwargs) -> User:
@@ -38,11 +33,10 @@ class Factory:
 
 class CycleFactory:
 
-    def __init__(self, db: SQLAlchemy, count: int) -> Factory:
-        self.db = db
+    def __init__(self, count: int) -> Factory:
         self.count = count
 
-        self.factory = Factory(self.db)
+        self.factory = Factory()
 
     def __getattr__(self, method_name: str):
         method = getattr(self.factory, method_name)

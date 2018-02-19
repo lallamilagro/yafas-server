@@ -1,19 +1,15 @@
 import datetime
 
+import bcrypt
+import jwt
 import sqlalchemy as sa
-from flask import current_app
-from flask_jwt_extended import (
-    create_access_token, create_refresh_token, get_jwt_identity)
 
-from yafas import db
-
-from . import bcrypt
+from yafas import config, db
 
 
-class User(db.Model):
+class User(db.Base):
     __tablename__ = 'users'
 
-    id = sa.Column(sa.Integer, primary_key=True)
     email = sa.Column(sa.String(255), unique=True, nullable=False)
     password = sa.Column(sa.String(255), nullable=False)
     registered_in = sa.Column(sa.DateTime, nullable=False)
@@ -26,19 +22,40 @@ class User(db.Model):
 
         self.active = active
 
-    def __hash_password(self, password: str) -> str:
-        return bcrypt.generate_password_hash(
-            password, current_app.config.get('BCRYPT_LOG_ROUNDS')).decode()
+    def __hash_password(self, password: str) -> bytes:
+        return bcrypt.hashpw(
+            password.encode(),
+            bcrypt.gensalt(config['BCRYPT_ROUNDS']),
+        )
 
     def check_password(self, password: str) -> bool:
-        return bcrypt.check_password_hash(self.password, password)
+        return bcrypt.checkpw(password.encode(), self.password)
+
+    def __create_token(self, token_type: str, expires_delta) -> bytes:
+        now = datetime.datetime.utcnow()
+        payload = {
+            'exp': now + expires_delta,
+            'iat': now,
+            'sub': self.email,
+            'type': token_type,
+        }
+        return jwt.encode(
+            payload,
+            config['SECRET_KEY'],
+            algorithm='HS256',
+        ).decode()
 
     def create_access_token(self) -> str:
-        return create_access_token(identity=self.email)
+        return self.__create_token('access', config['ACCESS_TOKEN_EXPIRES'])
 
     def create_refresh_token(self) -> str:
-        return create_refresh_token(identity=self.email)
+        return self.__create_token('refresh', config['REFRESH_TOKEN_EXPIRES'])
 
     @classmethod
-    def jwt_retrieve(cls) -> 'User':
-        return cls.query.filter_by(email=get_jwt_identity()).first()
+    def decode_token(cls, token: str) -> dict:
+        return jwt.decode(token.encode(), config['SECRET_KEY'])
+
+    @classmethod
+    def retrieve_by_token(cls, token: str) -> 'User':
+        decoded = cls.decode_token(token)
+        return cls.query.filter_by(email=decoded['sub']).first()

@@ -1,7 +1,7 @@
-from tests.test_tools.client import ApiClient
+from tests.test_tools.cors import cors_callback
 from tests.test_tools.factory import Factory
 
 __all__ = [
-    'ApiClient',
     'Factory',
+    'cors_callback',
 ]

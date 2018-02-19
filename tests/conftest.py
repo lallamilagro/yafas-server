@@ -1,50 +1,62 @@
+from unittest.mock import patch
+
 import pytest
-from mixer.backend.flask import mixer as flask_mixer
+from mixer.backend.sqlalchemy import mixer as sqlalchemy_mixer
 
-from tests import ApiClient, Factory
-from yafas import YafasApp, db as yafas_db
-
-app_config = dict(
-    BCRYPT_LOG_ROUNDS=4,
-    JWT_SECRET_KEY='I-hate-frontend',
-    MIGRATIONS_DIR='yafas/migrations/',
-    SECRET_KEY='12345',
-    SQLALCHEMY_DATABASE_URI='sqlite:///:memory:',
-    SQLALCHEMY_TRACK_MODIFICATIONS=False,
-)
+from tests import Factory
+from yafas import config as yafas_config, db as yafas_db
+from yafas.app import YafasApp
 
 
 @pytest.fixture(scope='session', autouse=True)
-def app() -> YafasApp:
-    app = YafasApp('yafas', config=app_config)
-    app.app_context().push()
+def config() -> dict:
+    overrides = {
+        'BCRYPT_ROUNDS': 4,
+        'SECRET_KEY': 'lolkekcheburek',
+        'DATABASE_URI': 'sqlite:///:memory:',
+    }
 
-    app.test_client_class = ApiClient
+    with patch.dict(yafas_config, overrides):
+        yield yafas_config
 
-    yafas_db.create_all()
+
+@pytest.fixture(scope='session', autouse=True)
+def app(config) -> YafasApp:
+    app = YafasApp()
+
+    yafas_db.create()
 
     return app
 
 
 @pytest.fixture
-def db():
-    savepoint = yafas_db.session.begin_nested()
+def api(app):
+    return app.api
+
+
+@pytest.fixture(autouse=True)
+def db(app):
+    """Manually creates db connection, start transaction and configre
+    session to use it."""
+    connection = yafas_db.engine.connect()
+    transaction = connection.begin()
+    yafas_db.session.configure(bind=connection)
+
     for _ in range(2):
         yafas_db.session.begin_nested()
+
     yield yafas_db
-    savepoint.rollback()
+
+    transaction.rollback()
+    connection.close()
+    yafas_db.session.remove()
 
 
 @pytest.fixture
-def mixer():
-    return flask_mixer
+def mixer(db):
+    return sqlalchemy_mixer
 
 
 @pytest.fixture
 def factory(db):
-    return Factory(db)
-
-
-@pytest.fixture
-def client(app):
-    return app.test_client()
+    return Factory()

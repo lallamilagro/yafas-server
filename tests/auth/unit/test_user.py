@@ -1,12 +1,10 @@
 import datetime
 
-from freezegun import freeze_time
 
-
-def test_registered_in_propery_auto_installed(factory):
+def test_registered_in_propery_auto_installed(freezer, factory):
     now = datetime.datetime.utcnow()
-    with freeze_time(now):
-        user = factory.user()
+    freezer.move_to(now)
+    user = factory.user()
 
     assert user.registered_in == now
 
