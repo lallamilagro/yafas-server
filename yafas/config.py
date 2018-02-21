@@ -9,4 +9,5 @@ config = {
     'ACCESS_TOKEN_EXPIRES': datetime.timedelta(minutes=15),
     'REFRESH_TOKEN_EXPIRES': datetime.timedelta(days=30),
     'SECRET_KEY': load('SECRET_KEY'),
+    'DATABASE_URI': load('DATABASE_URI', default='sqlite:///yafas.db'),
 }

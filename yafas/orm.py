@@ -25,8 +25,7 @@ class db:
 
     @classmethod
     def init(cls):
-        cls.engine = create_engine(
-            config.get('DATABASE_URI', 'sqlite:///yafas.db'))
+        cls.engine = create_engine(config['DATABASE_URI'])
         cls.session.configure(bind=cls.engine)
 
     @classmethod
