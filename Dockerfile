@@ -9,4 +9,4 @@ EXPOSE 5000
 
 ENV BCRYPT_ROUNDS=4 SECRET_KEY=we-hate-you
 
-CMD alembic upgrade head && gunicorn app:app.api -w 4 -b 0.0.0.0:5000
+CMD alembic upgrade head && gunicorn app:api -w 4 -b 0.0.0.0:5000
