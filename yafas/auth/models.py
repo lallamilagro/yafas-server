@@ -22,14 +22,14 @@ class User(db.Base):
 
         self.active = active
 
-    def __hash_password(self, password: str) -> bytes:
+    def __hash_password(self, password: str) -> str:
         return bcrypt.hashpw(
             password.encode(),
             bcrypt.gensalt(config['BCRYPT_ROUNDS']),
-        )
+        ).decode()
 
     def check_password(self, password: str) -> bool:
-        return bcrypt.checkpw(password.encode(), self.password)
+        return bcrypt.checkpw(password.encode(), self.password.encode())
 
     def __create_token(self, token_type: str, expires_delta) -> bytes:
         now = datetime.datetime.utcnow()

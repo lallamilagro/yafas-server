@@ -15,6 +15,12 @@ def test_password_hashed(factory):
     assert user.password != 'test'
 
 
+def test_password_stored_as_string(factory):
+    user = factory.user(password='test')
+
+    assert isinstance(user.password, str)
+
+
 def test_check_password(factory):
     user = factory.user(password='test')
 
