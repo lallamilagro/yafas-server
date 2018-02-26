@@ -2,28 +2,29 @@ from . import exceptions
 from .models import User
 
 
-class JWTTokenMiddleware:
+class JWTCookieMiddleware:
 
-    def parse_token(self, req) -> str:
-        auth = req.headers.get('AUTHORIZATION')  # type: str
-        return auth.split(' ')[-1]
+    def validate_token(self, token: str):
+        User.decode_token(token)
 
-    def handle_required_type(self, token: str, required_type: str):
-        token_type = User.decode_token(token)['type']
+    def set_user_method(self, resource, token: str):
+        resource.user = lambda: User.retrieve_by_token(token)
 
-        if token_type != required_type:
-            raise exceptions.JWTInvalidTokenType(
-                f'Only {required_type} tokens can access this endpoint')
+    def load_token(self, request):
+        token = request.cookies.get('access_token')
+        if not token:
+            raise exceptions.JWTNoTokens('No tokens passed')
+        return token
 
-    def process_resource(self, req, res, resource, params):
-        if req.method == 'OPTIONS':
+    def process_resource(self, request, response, resource, params):
+        if request.method == 'OPTIONS':
             return
 
-        required_type = getattr(resource, 'required_token', 'access')
-        if not required_type:
+        require_token = getattr(resource, 'require_token', True)
+        if not require_token:
             return
 
-        token = self.parse_token(req)
-        self.handle_required_type(token, required_type)
+        token = self.load_token(request)
 
-        resource.user = User.retrieve_by_token(token)
+        self.validate_token(token)
+        self.set_user_method(resource, token)

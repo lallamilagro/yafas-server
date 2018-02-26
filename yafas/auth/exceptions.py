@@ -2,5 +2,5 @@ class JWTException(Exception):
     pass
 
 
-class JWTInvalidTokenType(JWTException):
+class JWTNoTokens(JWTException):
     pass

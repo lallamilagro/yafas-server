@@ -1,7 +1,7 @@
 import falcon
 from jwt.exceptions import DecodeError as JWTDecodeError, ExpiredSignatureError
 
-from .exceptions import JWTInvalidTokenType
+from .exceptions import JWTNoTokens
 
 
 def unprocessable_entity_handler(exception, request, response, params):
@@ -15,7 +15,7 @@ def unauthorized_handler(exception, request, response, params):
 
 
 handlers = (
-    (JWTInvalidTokenType, unprocessable_entity_handler),
+    (JWTNoTokens, unauthorized_handler),
     (JWTDecodeError, unprocessable_entity_handler),
     (ExpiredSignatureError, unauthorized_handler),
 )

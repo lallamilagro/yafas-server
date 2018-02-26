@@ -1,5 +1,12 @@
-from yafas.auth.middlewares import JWTTokenMiddleware
+from yafas.auth.middlewares import JWTCookieMiddleware
 from yafas.orm import SQLAlchemySessionMiddleware
+
+
+class DefaultResponseJsonMiddleware:
+
+    def process_response(self, request, response, *args, **kwargs):
+        if response.media is None:
+            response.media = {}
 
 
 class CORSMiddleware:
@@ -12,7 +19,8 @@ class CORSMiddleware:
 
 
 middlewares = [
-    JWTTokenMiddleware(),
+    JWTCookieMiddleware(),
     SQLAlchemySessionMiddleware(),
     CORSMiddleware(),
+    DefaultResponseJsonMiddleware(),
 ]

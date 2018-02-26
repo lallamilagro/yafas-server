@@ -48,9 +48,6 @@ class User(db.Base):
     def create_access_token(self) -> str:
         return self.__create_token('access', config['ACCESS_TOKEN_EXPIRES'])
 
-    def create_refresh_token(self) -> str:
-        return self.__create_token('refresh', config['REFRESH_TOKEN_EXPIRES'])
-
     @classmethod
     def decode_token(cls, token: str) -> dict:
         return jwt.decode(token.encode(), config['SECRET_KEY'])
