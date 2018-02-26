@@ -26,4 +26,5 @@ pytest-freezegun==0.2.0
 pytest-mock==1.6.3
 pytest==3.4.0
 python-dotenv==0.7.1
+raven==6.5.0
 sqlalchemy==1.2.2
