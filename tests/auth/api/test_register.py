@@ -28,6 +28,7 @@ def test_registration_returns_cookie_token(client):
     assert token_cookie.name == 'access_token'
     assert token_cookie.http_only
     assert token_cookie.secure
+    assert token_cookie.path == '/'
 
     assert User.retrieve_by_token(token_cookie.value) == User.query.first()
 
