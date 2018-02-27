@@ -14,7 +14,7 @@ class CORSMiddleware:
     def process_response(self, request, response, *args, **kwargs):
         response.set_headers({
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': ('CONTENT-TYPE', 'Authorization'),
+            'Access-Control-Allow-Headers': 'Content-Type',
         })
 
 
