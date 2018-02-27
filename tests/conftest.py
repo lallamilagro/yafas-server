@@ -11,9 +11,10 @@ from yafas.app import YafasApp
 @pytest.fixture(scope='session', autouse=True)
 def config() -> dict:
     overrides = {
+        'ALLOW_ORIGIN': 'http://test.yafas.org',
         'BCRYPT_ROUNDS': 4,
-        'SECRET_KEY': 'lolkekcheburek',
         'DATABASE_URI': 'sqlite:///:memory:',
+        'SECRET_KEY': 'lolkekcheburek',
     }
 
     with patch.dict(yafas_config, overrides):

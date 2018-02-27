@@ -17,7 +17,7 @@ class Login:
     def on_post(self, request, response):
         token, _ = schemas.LoginSchema().load(
             request.media)
-        response.set_cookie('access_token', token)
+        response.set_cookie('access_token', token, path='/')
         response.status = falcon.HTTP_201
 
 
@@ -27,7 +27,7 @@ class Register:
     def on_post(self, request, response):
         token, _ = schemas.RegistrationSchema().load(
             request.media)
-        response.set_cookie('access_token', token)
+        response.set_cookie('access_token', token, path='/')
         response.status = falcon.HTTP_201
 
 

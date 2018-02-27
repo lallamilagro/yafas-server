@@ -13,7 +13,7 @@ def user(db, factory):
     return factory.user(email='test@test.com', password='test')
 
 
-def test_login_returns_cookie_token(client, user):
+def test_login_returns_cookie_token(config, client, user):
     response = client.post(URL, json={
         'email': 'test@test.com',
         'password': 'test',
@@ -24,6 +24,7 @@ def test_login_returns_cookie_token(client, user):
     assert token_cookie.name == 'access_token'
     assert token_cookie.http_only
     assert token_cookie.secure
+    assert token_cookie.path == '/'
 
     assert User.retrieve_by_token(token_cookie.value).id == user.id
 
