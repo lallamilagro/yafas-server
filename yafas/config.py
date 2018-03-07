@@ -10,5 +10,6 @@ config = {
     'BCRYPT_ROUNDS': load('BCRYPT_ROUNDS', int),
     'DATABASE_URI': load('DATABASE_URI', default='sqlite:///yafas.db'),
     'SECRET_KEY': load('SECRET_KEY'),
+    'SECURE_COOKIES': load('SECURE_COOKIES', bool, default=True),
     'SENTRY_DSN': load('YAFAS_SERVER_SENTRY_DSN', default=None),
 }
