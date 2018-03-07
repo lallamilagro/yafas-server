@@ -1,6 +1,22 @@
 import falcon
 
-from . import schemas
+from . import CookieCreator, schemas
+
+
+class AuthCookiesMixin:
+
+    schema = None
+    require_token = None
+
+    def cookies_data(self, request) -> dict:
+        token, _ = self.schema().load(request.media)
+        return CookieCreator(token)()
+
+    def set_cookies(self, request, response):
+        cookies_data = self.cookies_data(request)
+
+        for cookie_name, cookie_data in cookies_data.items():
+            response.set_cookie(cookie_name, **cookie_data)
 
 
 class CheckEmail:
@@ -11,23 +27,19 @@ class CheckEmail:
         response.media = {}
 
 
-class Login:
-    require_token = None
+class Login(AuthCookiesMixin):
+    schema = schemas.LoginSchema
 
     def on_post(self, request, response):
-        token, _ = schemas.LoginSchema().load(
-            request.media)
-        response.set_cookie('access_token', token, path='/')
+        self.set_cookies(request, response)
         response.status = falcon.HTTP_201
 
 
-class Register:
-    require_token = None
+class Register(AuthCookiesMixin):
+    schema = schemas.RegistrationSchema
 
     def on_post(self, request, response):
-        token, _ = schemas.RegistrationSchema().load(
-            request.media)
-        response.set_cookie('access_token', token, path='/')
+        self.set_cookies(request, response)
         response.status = falcon.HTTP_201
 
 

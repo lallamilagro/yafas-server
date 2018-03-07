@@ -1,3 +1,4 @@
+from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
@@ -11,10 +12,12 @@ from yafas.app import YafasApp
 @pytest.fixture(scope='session', autouse=True)
 def config() -> dict:
     overrides = {
+        'ACCESS_TOKEN_EXPIRES': timedelta(days=30),
         'ALLOW_ORIGIN': 'http://test.yafas.org',
         'BCRYPT_ROUNDS': 4,
         'DATABASE_URI': 'sqlite:///:memory:',
         'SECRET_KEY': 'lolkekcheburek',
+        'SECURE_COOKIES': True,
     }
 
     with patch.dict(yafas_config, overrides):
