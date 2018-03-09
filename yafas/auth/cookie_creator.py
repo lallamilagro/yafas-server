@@ -1,3 +1,4 @@
+from yafas import config
 from yafas.auth.models import User
 
 
@@ -11,7 +12,7 @@ class CookieCreator:
 
     def __call__(self) -> dict:
         base_kw = {
-            'secure': True,
+            'secure': config['SECURE_COOKIES'],
             'path': '/',
             'max_age': self.expires(),
         }
