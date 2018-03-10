@@ -11,5 +11,6 @@ config = {
     'DATABASE_URI': load('DATABASE_URI', default='sqlite:///yafas.db'),
     'SECRET_KEY': load('SECRET_KEY'),
     'SECURE_COOKIES': load('SECURE_COOKIES', bool, default=True),
+    'COOKIES_DOMAIN': load('COOKIES_DOMAIN', default='yafas.org'),
     'SENTRY_DSN': load('YAFAS_SERVER_SENTRY_DSN', default=None),
 }

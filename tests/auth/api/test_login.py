@@ -27,6 +27,7 @@ def test_login_returns_cookie_token(config, client, user):
     assert token_cookie.http_only
     assert token_cookie.secure
     assert token_cookie.path == '/'
+    assert token_cookie.domain == 'yafas.org'
 
     assert User.retrieve_by_token(token_cookie.value).id == user.id
 

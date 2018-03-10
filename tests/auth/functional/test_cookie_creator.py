@@ -26,6 +26,14 @@ def test_cookies_are_secure(cookies_data):
     assert access_cookie['secure'] is True
 
 
+def test_cookies_has_domain(cookies_data):
+    access_cookie = cookies_data['access_token']
+    logged_in = cookies_data['logged_in']
+
+    assert access_cookie['domain'] == logged_in['domain']
+    assert access_cookie['domain'] == 'yafas.org'
+
+
 def test_access_cookie_is_http_only(cookies_data):
     access_cookie = cookies_data['access_token']
 

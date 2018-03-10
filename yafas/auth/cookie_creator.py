@@ -12,9 +12,10 @@ class CookieCreator:
 
     def __call__(self) -> dict:
         base_kw = {
-            'secure': config['SECURE_COOKIES'],
-            'path': '/',
+            'domain': config['COOKIES_DOMAIN'],
             'max_age': self.expires(),
+            'path': '/',
+            'secure': config['SECURE_COOKIES'],
         }
         return {
             'access_token': dict(value=self.token, http_only=True, **base_kw),

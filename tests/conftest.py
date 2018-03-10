@@ -18,6 +18,7 @@ def config() -> dict:
         'DATABASE_URI': 'sqlite:///:memory:',
         'SECRET_KEY': 'lolkekcheburek',
         'SECURE_COOKIES': True,
+        'COOKIES_DOMAIN': 'yafas.org',
     }
 
     with patch.dict(yafas_config, overrides):
