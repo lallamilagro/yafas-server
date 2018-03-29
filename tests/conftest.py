@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import pytest
@@ -68,6 +68,11 @@ def factory(db):
 
 
 @pytest.fixture
+def now():
+    return datetime.utcnow()
+
+
+@pytest.fixture
 def ApiTestClientCls(ApiTestClientCls, config):
 
     class ApiTestClient(ApiTestClientCls):
@@ -79,5 +84,16 @@ def ApiTestClientCls(ApiTestClientCls, config):
                 'Access-Control-Allow-Credentials'] == 'true'
             assert 'Content-Type' in response.headers[
                 'Access-Control-Allow-Headers']
+
+        def prepare_request(self, method, expected, *args, **kwargs):
+            user = kwargs.pop('user', None)
+
+            if user:
+                access_token = user.create_access_token()
+                headers = kwargs.get('headers', {})
+                headers['cookie'] = f'access_token={access_token}'
+                kwargs['headers'] = headers
+
+            return args, kwargs
 
     return ApiTestClient

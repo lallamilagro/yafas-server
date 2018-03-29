@@ -1,8 +1,4 @@
-import datetime
-
-
-def test_registered_in_propery_auto_installed(freezer, factory):
-    now = datetime.datetime.utcnow()
+def test_registered_in_propery_auto_installed(freezer, now, factory):
     freezer.move_to(now)
     user = factory.user()
 

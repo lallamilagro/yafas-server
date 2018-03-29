@@ -6,10 +6,7 @@ URL = '/api/v1/auth/info/'
 @pytest.mark.freeze_time('2018-01-01 12:00')
 def test_response_content(client, factory):
     user = factory.user(email='test@test.com', password='test')
-    access_token = user.create_access_token()
-
-    headers = {'cookie': f'access_token={access_token}'}
-    got = client.get(URL, headers=headers)
+    got = client.get(URL, user=user)
 
     assert got == {
         'email': 'test@test.com',
