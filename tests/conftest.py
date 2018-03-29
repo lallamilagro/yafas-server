@@ -65,3 +65,19 @@ def mixer(db):
 @pytest.fixture
 def factory(db):
     return Factory()
+
+
+@pytest.fixture
+def ApiTestClientCls(ApiTestClientCls, config):
+
+    class ApiTestClient(ApiTestClientCls):
+
+        def response_assertions(self, response):
+            assert response.headers[
+                'Access-Control-Allow-Origin'] == config['ALLOW_ORIGIN']
+            assert response.headers[
+                'Access-Control-Allow-Credentials'] == 'true'
+            assert 'Content-Type' in response.headers[
+                'Access-Control-Allow-Headers']
+
+    return ApiTestClient

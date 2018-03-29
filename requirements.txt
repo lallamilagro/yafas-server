@@ -21,7 +21,7 @@ mixer==6.0.1
 paramiko==2.4.0
 psycopg2==2.7.4
 pyjwt==1.5.3
-pytest-falcon-client==0.1.0
+pytest-falcon-client==1.0.0
 pytest-freezegun==0.2.0
 pytest-mock==1.6.3
 pytest==3.4.0

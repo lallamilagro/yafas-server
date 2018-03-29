@@ -1,9 +1,5 @@
 import pytest
 
-from tests import cors_callback
-
-pytestmark = pytest.mark.client(callback=cors_callback)
-
 URL = '/api/v1/auth/info/'
 
 
