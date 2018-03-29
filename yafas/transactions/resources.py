@@ -1,14 +1,22 @@
-from . import models, schemas
+import falcon
+
+from . import schemas
 
 
 class Transaction:
 
-    def instance(self, id: int) -> models.Transaction:
-        return models.Transaction.query.get_by(
-            id=id,
-            user_id=self.user().id,
-        )
-
     def on_get(self, request, response, id: int):
-        instance = self.instance(id)
-        response.media, _ = schemas.TransactionSchema().dump(instance)
+        response.media, _ = schemas.TransactionRetrieveSchema().load(dict(
+            id=id, user_id=self.user().id,
+        ))
+
+    def on_put(self, request, response, id: int):
+        response.media, _ = schemas.TransactionUpdateSchema().load(dict(
+            user_id=self.user().id, id=id, **request.media,
+        ))
+
+    def on_delete(self, request, response, id: int):
+        schemas.TransactionDeleteSchema().load(dict(
+            user_id=self.user().id, id=id,
+        ))
+        response.status = falcon.HTTP_204

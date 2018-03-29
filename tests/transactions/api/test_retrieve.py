@@ -2,20 +2,10 @@ from decimal import Decimal
 
 import pytest
 
-pytestmark = pytest.mark.wip
-
 
 def url(id: int=None) -> str:
     _url = '/api/v1/transactions/'
     return _url + f'{id}/' if id else _url
-
-
-@pytest.fixture
-def user_and_transaction(factory):
-    def make(**kwargs):
-        user = factory.user()
-        return user, factory.transaction(user_id=user.id, **kwargs)
-    return make
 
 
 @pytest.mark.parametrize('value, expected', (
@@ -30,7 +20,6 @@ def test_retrieve(value, expected, client, freezer, now, user_and_transaction):
     got = client.get(url(transaction.id), user=user)
 
     assert got['id'] == transaction.id
-    assert got['user_id'] == user.id == transaction.user_id
     assert got['value'] == expected
     assert got['created_at'] == f'{now.isoformat()}+00:00'
 
