@@ -15,6 +15,8 @@ class User(db.Base):
     registered_in = sa.Column(sa.DateTime, nullable=False)
     active = sa.Column(sa.Boolean, default=True, nullable=False)
 
+    transactions = sa.orm.relationship('Transaction', back_populates='user')
+
     def __init__(self, email: str, password: str, active: bool=None):
         self.email = email
         self.password = self.__hash_password(password)
