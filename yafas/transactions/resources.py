@@ -20,3 +20,17 @@ class Transaction:
             user_id=self.user().id, id=id,
         ))
         response.status = falcon.HTTP_204
+
+
+class Transactions:
+
+    def on_post(self, request, response):
+        response.media, _ = schemas.TransactionCreateSchema().load(dict(
+            user_id=self.user().id, **request.media,
+        ))
+        response.status = falcon.HTTP_201
+
+    def on_get(self, request, response):
+        response.media, _ = schemas.TransactionListSchema().load(
+            {'user_id': self.user().id},
+        )

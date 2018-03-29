@@ -52,3 +52,25 @@ class TransactionDeleteSchema(BaseSchema):
 
         db.session.delete(instance)
         db.session.commit()
+
+
+class TransactionCreateSchema(StrictSchema):
+    value = fields.Decimal(required=True)
+    user_id = fields.Int(required=True)
+
+    @post_load
+    def create(self, data: dict) -> dict:
+        instance = Transaction(**data)
+        db.session.add(instance)
+        db.session.commit()
+
+        return TransactionSchema().dump(instance)[0]
+
+
+class TransactionListSchema(StrictSchema):
+    user_id = fields.Int(required=True)
+
+    @post_load
+    def list(self, data: dict) -> list:
+        instances = Transaction.query.filter_by(**data)
+        return TransactionSchema(many=True).dump(instances)[0]

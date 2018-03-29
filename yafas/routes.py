@@ -7,4 +7,5 @@ routes = (
     ('auth/login', auth_resources.Login()),
     ('auth/info', auth_resources.Info()),
     ('transactions/{id}', transaction_resources.Transaction()),
+    ('transactions', transaction_resources.Transactions()),
 )
