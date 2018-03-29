@@ -1,3 +1,5 @@
+import falcon
+
 from yafas import config
 from yafas.auth.middlewares import JWTCookieMiddleware
 from yafas.orm import SQLAlchemySessionMiddleware
@@ -6,7 +8,7 @@ from yafas.orm import SQLAlchemySessionMiddleware
 class DefaultResponseJsonMiddleware:
 
     def process_response(self, request, response, *args, **kwargs):
-        if response.media is None:
+        if response.media is None and response.status != falcon.HTTP_204:
             response.media = {}
 
 

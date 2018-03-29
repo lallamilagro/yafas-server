@@ -1,7 +1,11 @@
+from decimal import Decimal
+from typing import Union
+
 from faker import Faker
 
 from yafas import db
 from yafas.auth.models import User
+from yafas.transactions.models import Transaction
 
 
 def _transaction(method):
@@ -11,6 +15,8 @@ def _transaction(method):
 
         db.session.add(instance)
         db.session.flush()
+        # refresh instance for real database representation
+        db.session.refresh(instance)
 
         return instance
 
@@ -29,6 +35,16 @@ class Factory:
         return User(
             email=email or self.faker.email(),
             password=password or self.faker.password(), **kwargs)
+
+    @_transaction
+    def transaction(
+            self,
+            value: Union[int, float, Decimal] = None,
+            user_id: int = None) -> Transaction:
+        return Transaction(
+            value=value or self.faker.random_number(digits=6),
+            user_id=user_id or self.user().id,
+        )
 
 
 class CycleFactory:

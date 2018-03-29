@@ -1,9 +1,26 @@
 import sqlalchemy as sa
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import query, scoped_session, sessionmaker
 
 from yafas import config
+
+
+class InstanceNotFound(Exception):
+    """Raised when nothing found.
+
+    .. seealso:: Query.get_by
+
+    """
+
+
+class Query(query.Query):
+
+    def get_by(self, **kwargs):
+        instance = self.filter_by(**kwargs).first()
+        if not instance:
+            raise InstanceNotFound
+        return instance
 
 
 def base_model_factory(session):
@@ -11,7 +28,7 @@ def base_model_factory(session):
 
         id = sa.Column(sa.Integer, primary_key=True)
 
-        query = session.query_property()
+        query = session.query_property(query_cls=Query)
 
     return BaseModel
 
