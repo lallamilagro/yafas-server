@@ -1,6 +1,6 @@
 import falcon
 
-from . import CookieCreator, schemas
+from . import CookieCreator, models, schemas
 
 
 class AuthCookiesMixin:
@@ -46,4 +46,5 @@ class Register(AuthCookiesMixin):
 class Info:
 
     def on_get(self, request, response):
-        response.media, _ = schemas.UserInfoSchema().dump(self.user())
+        user = models.User.query.get(request.user_id)
+        response.media, _ = schemas.UserInfoSchema().dump(user)

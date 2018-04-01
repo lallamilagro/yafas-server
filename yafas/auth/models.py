@@ -38,7 +38,7 @@ class User(db.Base):
         payload = {
             'exp': now + expires_delta,
             'iat': now,
-            'sub': self.email,
+            'sub': self.id,
             'type': token_type,
         }
         return jwt.encode(
@@ -57,4 +57,4 @@ class User(db.Base):
     @classmethod
     def retrieve_by_token(cls, token: str) -> 'User':
         decoded = cls.decode_token(token)
-        return cls.query.filter_by(email=decoded['sub']).first()
+        return cls.query.get(decoded['sub'])

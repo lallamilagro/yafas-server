@@ -7,7 +7,7 @@ def test_create_access_token(factory):
 
     decoded = User.decode_token(token)
 
-    assert decoded['sub'] == user.email
+    assert decoded['sub'] == user.id
     assert decoded['type'] == 'access'
 
 
