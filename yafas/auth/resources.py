@@ -1,10 +1,9 @@
 import falcon
 
-from . import CookieCreator, schemas
+from . import CookieCreator, data_api, schemas
 
 
 class AuthCookiesMixin:
-
     schema = None
     require_token = None
 
@@ -46,4 +45,4 @@ class Register(AuthCookiesMixin):
 class Info:
 
     def on_get(self, request, response):
-        response.media, _ = schemas.UserInfoSchema().dump(self.user())
+        response.media = data_api.UserApi(id=request.user_id).retrieve()

@@ -4,11 +4,8 @@ from .models import User
 
 class JWTCookieMiddleware:
 
-    def validate_token(self, token: str):
-        User.decode_token(token)
-
-    def set_user_method(self, resource, token: str):
-        resource.user = lambda: User.retrieve_by_token(token)
+    def decode_token(self, token: str) -> dict:
+        return User.decode_token(token)
 
     def load_token(self, request):
         token = request.cookies.get('access_token')
@@ -26,5 +23,5 @@ class JWTCookieMiddleware:
 
         token = self.load_token(request)
 
-        self.validate_token(token)
-        self.set_user_method(resource, token)
+        token_payload = self.decode_token(token)
+        request.user_id = token_payload['sub']
