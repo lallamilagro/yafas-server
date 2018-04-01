@@ -55,7 +55,7 @@ class DataApi:
     def delete(self):
         instance = self.instance()
         self.session.delete(instance)
-        db.session.commit()
+        self.session.commit()
 
     @serialize
     @prepare_data
