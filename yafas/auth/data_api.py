@@ -1,4 +1,4 @@
-from yafas.base.data_api import DataApi
+from yafas.base import DataApi
 
 from . import models, schemas
 

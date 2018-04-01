@@ -23,13 +23,13 @@ def prepare_data(fn):
 
 
 class DataApi:
-
     model = None
     serializers = {
         'retrieve': None,
         'create': None,
         'update': None,
     }
+    session = db.session
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
@@ -48,21 +48,21 @@ class DataApi:
         for key, value in data.items():
             setattr(instance, key, value)
 
-        db.session.add(instance)
-        db.session.commit()
+        self.session.add(instance)
+        self.session.commit()
         return instance
 
     def delete(self):
         instance = self.instance()
-        db.session.delete(instance)
+        self.session.delete(instance)
         db.session.commit()
 
     @serialize
     @prepare_data
     def create(self, **data):
         instance = self.model(**self.kwargs, **data)
-        db.session.add(instance)
-        db.session.commit()
+        self.session.add(instance)
+        self.session.commit()
         return instance
 
     @serialize
