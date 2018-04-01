@@ -85,6 +85,11 @@ def ApiTestClientCls(ApiTestClientCls, config):
             assert 'Content-Type' in response.headers[
                 'Access-Control-Allow-Headers']
 
+            allow = response.headers.get('allow', None)
+            if allow:
+                assert response.headers[
+                    'Access-Control-Allow-Methods'] == allow
+
         def prepare_request(self, method, expected, *args, **kwargs):
             user = kwargs.pop('user', None)
 

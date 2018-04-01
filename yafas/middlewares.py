@@ -17,12 +17,25 @@ class CORSMiddleware:
     def allow_orogin_value(self, request) -> str:
         return request.headers.get('ORIGIN', config['ALLOW_ORIGIN'])
 
-    def process_response(self, request, response, *args, **kwargs):
-        response.set_headers({
+    def options_required_headers(self, request, response) -> dict:
+        return {
+            'Access-Control-Allow-Methods': response.get_header('allow') or '',
+        }
+
+    def required_headers(self, request, response) -> dict:
+        headers = {
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': self.allow_orogin_value(request),
             'Access-Control-Allow-Headers': 'Content-Type',
-        })
+        }
+
+        if request.method == 'OPTIONS':
+            headers.update(self.options_required_headers(request, response))
+
+        return headers
+
+    def process_response(self, request, response, *args, **kwargs):
+        response.set_headers(self.required_headers(request, response))
 
 
 middlewares = [
