@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 
 @pytest.mark.parametrize('value, expected', (
@@ -35,3 +36,8 @@ def test_transactions_relation_of_user(factory):
     assert len(user.transactions) == 2
     for transaction in transactions:
         assert transaction in user.transactions
+
+
+def test_user_constraint(db, factory):
+    with pytest.raises(IntegrityError):
+        factory.transaction(user_id=100500)
