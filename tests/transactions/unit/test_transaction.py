@@ -19,7 +19,7 @@ def test_created_at_is_auto_installed(freezer, now, factory):
 
     transaction = factory.transaction()
 
-    assert transaction.created_at == now
+    assert transaction.on_date == now
 
 
 def test_user_relation(factory):

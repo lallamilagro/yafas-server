@@ -17,7 +17,7 @@ def test_retrieve(
 
     assert got['id'] == transaction.id
     assert got['value'] == expected
-    assert got['created_at'] == f'{now.isoformat()}+00:00'
+    assert got['on_date'] == f'{now.isoformat()}+00:00'
 
 
 def test_retrieve_for_current_user_only(client, url, user_and_transaction):

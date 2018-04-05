@@ -1,12 +1,19 @@
+from datetime import timedelta
 from decimal import Decimal
 
 
-def test_update(client, db, url, user_and_transaction):
+def test_update(client, now, db, url, user_and_transaction):
     user, transaction = user_and_transaction()
 
-    client.put(url(transaction.id), json={'value': 123.45}, user=user)
+    new_date = now + timedelta(days=2)
+    client.put(
+        url(transaction.id),
+        json={'value': 123.45, 'on_date': new_date.isoformat()},
+        user=user,
+    )
 
     assert transaction.value == Decimal('123.45')
+    assert transaction.on_date == new_date
 
 
 def test_update_returns_the_same_instance(
