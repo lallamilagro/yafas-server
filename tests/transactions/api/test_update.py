@@ -13,7 +13,7 @@ def test_update(client, now, db, url, user_and_transaction):
     )
 
     assert transaction.value == Decimal('123.45')
-    assert transaction.on_date == new_date
+    assert transaction.on_date == new_date.date()
 
 
 def test_update_returns_the_same_instance(

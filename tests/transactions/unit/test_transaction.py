@@ -14,12 +14,12 @@ def test_value(value, expected, factory):
     assert transaction.value == expected
 
 
-def test_created_at_is_auto_installed(freezer, now, factory):
+def test_on_date_is_auto_installed(freezer, now, factory):
     freezer.move_to(now)
 
     transaction = factory.transaction()
 
-    assert transaction.on_date == now
+    assert transaction.on_date == now.date()
 
 
 def test_user_relation(factory):
