@@ -13,7 +13,7 @@ def test_has_required_fields(client, factory, url):
 
     got = client.get(url(), user=user)
 
-    for field in ('id', 'created_at', 'value'):
+    for field in ('id', 'on_date', 'value'):
         for el in got:
             assert field in el
 
